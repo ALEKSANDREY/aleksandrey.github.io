@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andre — Software Developer</title>
+    <meta name="description" content="Andre — Software Developer based in San Francisco. JavaScript, Python, TypeScript, Cloud & DevOps.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-card-hover: #1a1a1a;
+            --border: #222222;
+            --text: #e5e5e5;
+            --text-muted: #888888;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --green: #22c55e;
+            --purple: #a855f7;
+            --orange: #f97316;
+            --cyan: #06b6d4;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient orbs */
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.07;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent);
+            top: -200px;
+            right: -200px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--purple);
+            bottom: -150px;
+            left: -150px;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        nav.scrolled {
+            border-bottom-color: var(--border);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-family: var(--mono);
+        }
+
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--purple), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 560px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            background: var(--bg-card);
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            padding: 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .skill-card:hover {
+            background: var(--bg-card-hover);
+            border-color: #333;
+            transform: translateY(-2px);
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .skill-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .skill-card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .skill-tag {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--mono);
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            background: var(--bg-card-hover);
+            border-color: #333;
+            transform: translateY(-2px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .project-icon {
+            font-size: 1.3rem;
+        }
+
+        .project-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .project-card:hover .project-arrow {
+            transform: translate(3px, -3px);
+            color: var(--accent);
+        }
+
+        .project-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .project-card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .project-tech span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: var(--mono);
+            font-weight: 500;
+        }
+
+        .tech-js { background: rgba(234, 179, 8, 0.1); color: #eab308; }
+        .tech-py { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+        .tech-ts { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .tech-html { background: rgba(249, 115, 22, 0.1); color: #f97316; }
+        .tech-aws { background: rgba(249, 115, 22, 0.1); color: #fb923c; }
+        .tech-devops { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+
+        /* About */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .about-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .about-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .about-detail .detail-icon {
+            font-size: 1.1rem;
+        }
+
+        .about-detail .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .about-detail .detail-value {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Contact */
+        .contact-section {
+            text-align: center;
+            padding: 100px 0 80px;
+        }
+
+        .contact-section .section-title {
+            margin-bottom: 16px;
+        }
+
+        .contact-description {
+            color: var(--text-muted);
+            max-width: 480px;
+            margin: 0 auto 40px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        /* Footer */
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Terminal block */
+        .terminal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 48px;
+            max-width: 600px;
+        }
+
+        .terminal-header {
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ef4444; }
+        .terminal-dot.yellow { background: #eab308; }
+        .terminal-dot.green { background: #22c55e; }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .terminal-body .prompt {
+            color: var(--green);
+        }
+
+        .terminal-body .command {
+            color: var(--text);
+        }
+
+        .terminal-body .output {
+            color: var(--text-muted);
+        }
+
+        .terminal-body .highlight {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.2rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .about-content { grid-template-columns: 1fr; }
+            .hero-cta { flex-direction: column; }
+            .btn { justify-content: center; }
+            section { padding: 60px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+
+    <nav id="nav">
+        <div class="container">
+            <a href="#" class="nav-logo"><span>&gt;</span> andre</a>
+            <ul class="nav-links">
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    Open to opportunities
+                </div>
+                <h1>
+                    I'm Andre.<br>
+                    I build things<br>
+                    <span class="gradient-text">for the web.</span>
+                </h1>
+                <p class="hero-description">
+                    Software developer based in San Francisco with a focus on 
+                    JavaScript, Python, and cloud technologies. I like turning 
+                    ideas into clean, functional code.
+                </p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        View Projects
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <div class="terminal-body">
+                        <div><span class="prompt">andre@sf</span> <span class="command">~ $ whoami</span></div>
+                        <div class="output">Software Developer, San Francisco</div>
+                        <div><span class="prompt">andre@sf</span> <span class="command">~ $ cat skills.txt</span></div>
+                        <div class="output">JavaScript · Python · TypeScript · Node.js · AWS · HTML/CSS</div>
+                        <div><span class="prompt">andre@sf</span> <span class="command">~ $ echo $STATUS</span></div>
+                        <div class="highlight">Building cool stuff ▮</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">// Skills</div>
+                <h2 class="section-title">What I work with</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">⚡</div>
+                    <h3>Frontend Development</h3>
+                    <p>Building responsive, interactive user interfaces with modern web technologies.</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">🔧</div>
+                    <h3>Backend & APIs</h3>
+                    <p>Server-side development, RESTful APIs, and working with databases and services.</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">REST APIs</span>
+                        <span class="skill-tag">Express</span>
+                    </div>
+                </div>
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">☁️</div>
+                    <h3>Cloud & DevOps</h3>
+                    <p>Cloud infrastructure, containerization, and deployment automation.</p>
+                    <div class="skill-tags">
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Kubernetes</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">CI/CD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">// Projects</div>
+                <h2 class="section-title">Things I've built</h2>
+            </div>
+            <div class="projects-grid">
+                <a href="https://github.com/ALEKSANDREY/dog-api-prework" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">🐕</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>Dog API Gallery</h3>
+                    <p>Interactive dog breed image gallery that fetches random images using the Dog CEO API. Browse by breed and discover adorable dogs.</p>
+                    <div class="project-tech">
+                        <span class="tech-js">JavaScript</span>
+                        <span class="tech-html">HTML/CSS</span>
+                    </div>
+                </a>
+                <a href="https://github.com/ALEKSANDREY/SafeActualDoom" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">🎮</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>SafeActualDoom</h3>
+                    <p>A Doom-inspired game built from scratch with Python. Game mechanics, rendering, and player interactions all coded by hand.</p>
+                    <div class="project-tech">
+                        <span class="tech-py">Python</span>
+                    </div>
+                </a>
+                <a href="https://github.com/ALEKSANDREY/Business-calculator-project" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">🧮</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>Business Calculator</h3>
+                    <p>A web-based business calculator for financial computations. Clean UI with practical real-world utility.</p>
+                    <div class="project-tech">
+                        <span class="tech-html">HTML</span>
+                        <span class="tech-js">JavaScript</span>
+                    </div>
+                </a>
+                <a href="https://github.com/ALEKSANDREY/nodeSchool2" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">📦</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>NodeSchool Workshops</h3>
+                    <p>Completed exercises from NodeSchool workshops, exploring Node.js ecosystem fundamentals in TypeScript.</p>
+                    <div class="project-tech">
+                        <span class="tech-ts">TypeScript</span>
+                    </div>
+                </a>
+                <a href="https://github.com/ALEKSANDREY/katacoda-scenarios" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">🚀</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>Katacoda Scenarios</h3>
+                    <p>Interactive DevOps and cloud learning scenarios. Hands-on labs for Kubernetes, Docker, and cloud infrastructure.</p>
+                    <div class="project-tech">
+                        <span class="tech-devops">DevOps</span>
+                        <span class="tech-aws">Cloud</span>
+                    </div>
+                </a>
+                <a href="https://github.com/ALEKSANDREY/schedule" target="_blank" class="project-card fade-in">
+                    <div class="project-header">
+                        <span class="project-icon">📅</span>
+                        <span class="project-arrow">↗</span>
+                    </div>
+                    <h3>Schedule App</h3>
+                    <p>A clean schedule management web application for organizing daily tasks and events.</p>
+                    <div class="project-tech">
+                        <span class="tech-html">HTML</span>
+                        <span class="tech-js">CSS/JS</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-label">// About</div>
+                <h2 class="section-title">A bit about me</h2>
+            </div>
+            <div class="about-content fade-in">
+                <div class="about-text">
+                    <p>
+                        I'm a software developer based in San Francisco who's been coding since 2017. 
+                        I started by diving into web development, worked through bootcamps and workshops 
+                        (Flatiron, HackReactor, NodeSchool), and kept building from there.
+                    </p>
+                    <p>
+                        I'm drawn to the full spectrum — from crafting frontend interfaces to wiring up 
+                        backend services and deploying on cloud infrastructure. I've worked with AWS services 
+                        including DeepRacer and SageMaker, and I enjoy exploring where AI and software intersect.
+                    </p>
+                    <p>
+                        When I'm not coding, I'm probably learning something new or tinkering with 
+                        side projects. I believe the best way to learn is to build.
+                    </p>
+                </div>
+                <div class="about-details">
+                    <div class="about-detail">
+                        <span class="detail-icon">📍</span>
+                        <div>
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">San Francisco, CA</div>
+                        </div>
+                    </div>
+                    <div class="about-detail">
+                        <span class="detail-icon">💻</span>
+                        <div>
+                            <div class="detail-label">Focus</div>
+                            <div class="detail-value">Full-Stack Development</div>
+                        </div>
+                    </div>
+                    <div class="about-detail">
+                        <span class="detail-icon">🎓</span>
+                        <div>
+                            <div class="detail-label">Learning</div>
+                            <div class="detail-value">AI / Machine Learning</div>
+                        </div>
+                    </div>
+                    <div class="about-detail">
+                        <span class="detail-icon">🟢</span>
+                        <div>
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">Open to Opportunities</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container fade-in">
+            <div class="section-label">// Contact</div>
+            <h2 class="section-title">Let's connect</h2>
+            <p class="contact-description">
+                I'm always interested in new opportunities and collaborations. 
+                Feel free to reach out.
+            </p>
+            <div class="contact-links">
+                <a href="https://github.com/ALEKSANDREY" target="_blank" class="contact-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="mailto:aleksandrey@users.noreply.github.com" class="contact-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    Email
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Built with code and curiosity. &copy; 2026 Andre.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Fade-in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Smooth cursor blink for terminal
+        const cursor = document.querySelector('.highlight');
+        if (cursor) {
+            setInterval(() => {
+                const text = cursor.textContent;
+                cursor.textContent = text.endsWith('▮') ? text.slice(0, -1) + ' ' : text.slice(0, -1) + '▮';
+            }, 600);
+        }
+    </script>
+</body>
+</html>
